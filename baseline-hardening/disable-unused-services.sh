@@ -1,29 +1,41 @@
-To quickly disable services at once: 
-systemctl disable avahi-daemon cups bluetooth
-
 #!/bin/bash
 # disable-unused-services.sh
-# Disables commonly unnecessary services to reduce attack surface
+# Disables unnecessary services to harden the system
 
-set -e
+set -euo pipefail
+
+timestamp() {
+    date +"[%Y-%m-%d %H:%M:%S]"
+}
+
+log() {
+    echo "$(timestamp) $1"
+}
 
 SERVICES_TO_DISABLE=(
-    avahi-daemon      # Zeroconf/Bonjour — rarely needed
-    cups              # Printer service — not needed on servers
-    bluetooth         # Not needed in VMs or most enterprise setups
-    ModemManager      # For mobile broadband — typically unused
-    rpcbind           # For NFS/RPC — only needed if using those services
-    ufw               # Replace if using nftables/firewalld manually
+    avahi-daemon
+    cups
+    bluetooth
+    ModemManager
+    rpcbind
+    ufw
 )
 
-echo "[*] Disabling unnecessary services..."
+log "[*] Disabling unused services..."
+
 for service in "${SERVICES_TO_DISABLE[@]}"; do
     if systemctl list-unit-files | grep -q "^$service"; then
-        echo "  - Disabling $service"
-        sudo systemctl disable --now "$service"
+        STATUS=$(systemctl is-enabled "$service" 2>/dev/null || echo "disabled")
+        if [[ "$STATUS" == "enabled" ]]; then
+            log "  - Disabling $service..."
+            sudo systemctl disable --now "$service"
+            log "    > $service disabled."
+        else
+            log "  - $service already disabled."
+        fi
     else
-        echo "  - $service not installed or not managed by systemd"
+        log "  - $service not found or not managed by systemd."
     fi
 done
 
-echo "[+] Service cleanup complete."
+log "[✓] Unused services processed."
