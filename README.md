@@ -1,6 +1,6 @@
 # 🛡️ linux-hardening-toolkit
 
-This repository contains hardened configurations, scripts, and templates designed to reduce risk in Linux environments — whether cloud-based, on-prem, or homelab. It follows CIS Benchmarks, NIST principles, and real-world blue team experience.
+This repository contains hardened configurations, scripts, and templates designed to reduce risk in Linux environments, whether cloud-based, on-prem, or homelab. It follows CIS Benchmarks, NIST principles, and real-world blue team experience.
 
 ## 🧠 Why This Exists
 
@@ -23,6 +23,7 @@ This repo exists to:
 | `kernel-and-services/` | sysctl.conf settings, module lockdown, grub hardening |
 | `file-permissions/` | World-writable scan, SUID/SGID tracking |
 | `monitoring-and-detection/` | Tools like Tripwire, AIDE, Rootkit Hunter |
+| `rollbacks-and-recovery/` | Reference writeups and scripts to safely revert system hardening changes |
 | `scripts/` | All-in-one automation and one-off utilities |
 | `docs/` | Glossary, hardening rationale, and threat model mapping |
 
