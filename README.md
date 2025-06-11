@@ -26,6 +26,16 @@ This repo exists to:
 | `scripts/` | All-in-one automation and one-off utilities |
 | `docs/` | Glossary, hardening rationale, and threat model mapping |
 
+## ⚠️ Disclaimer: No Live Audit Results Included
+This repository does not contain any real audit data, production system results, or sensitive configurations.
+
+All content here is:
+🔹 Educational and template-based
+🔹 Designed to help users learn CIS hardening and practice auditing
+🔹 Based on public benchmarks (e.g., CIS Debian 11, MITRE ATT&CK)
+
+⚠️ Use this framework to build your own compliance tooling, audits, or lab exercises. Do not assume this reflects the security posture of any real infrastructure.
+
 ## 🔧 Example Script: SSH Lockdown
 
 ```bash
