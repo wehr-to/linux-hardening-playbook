@@ -39,3 +39,21 @@
 | **8.3** | Remove unnecessary packages (e.g., `nmap`, `telnet`)            | 🔲     |
 | **8.4** | Maintain backups of critical configuration files                | 🔲     |
 
+| Topic                     | Ubuntu-Specific Behavior                                                                 |
+| ------------------------- | ---------------------------------------------------------------------------------------- |
+| **Init System**           | Uses `systemd` exclusively; all services and targets managed via `systemctl`             |
+| **Firewall**              | `ufw` (Uncomplicated Firewall) is the default frontend; can use `iptables` or `nftables` |
+| **AppArmor**              | Enabled and loaded by default; profiles stored in `/etc/apparmor.d/`                     |
+| **Filesystem Integrity**  | `aide` must be installed manually (`apt install aide`); not configured by default        |
+| **SSH Config**            | `/etc/ssh/sshd_config` used; `openssh-server` often preinstalled on servers              |
+| **User UIDs**             | Local users start at UID **1000** (controlled via `/etc/login.defs`)                     |
+| **Time Sync**             | `systemd-timesyncd` active by default; can use `chrony` or `ntp` manually                |
+| **IPv6**                  | Enabled by default; must be explicitly disabled via sysctl and GRUB                      |
+| **Secure Boot**           | Enabled on most cloud/VPS platforms with UEFI; enforced kernel modules signing           |
+| **Sudo Defaults**         | Root disabled by default; first user is auto-added to `sudo` group                       |
+| **Automatic Updates**     | Supported via `unattended-upgrades`; install + configure manually                        |
+| **Audit Logging**         | `auditd` not installed by default; requires `apt install auditd`                         |
+| **Compiler Restrictions** | Not applied by default; compilers (`gcc`, `make`) often present even on production       |
+| **Default Shells**        | `/bin/bash` or `/bin/sh` default; non-login shells like `/usr/sbin/nologin` available    |
+| **Snap Packages**         | Snapd installed/enabled by default; not covered by apt-level package audits              |
+
