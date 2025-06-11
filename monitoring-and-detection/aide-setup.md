@@ -10,7 +10,7 @@ AIDE detects unauthorized modifications to critical files and system binaries, a
 - Provides cryptographic checksums for file verification
 - Lightweight and suitable for servers and endpoint monitoring
 
-## 🔧 Installation (Debian/Ubuntu)
+## Installation (Debian/Ubuntu)
 ```bash
 sudo apt update && sudo apt install aide -y
 ```
