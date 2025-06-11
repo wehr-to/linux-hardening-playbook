@@ -2,26 +2,34 @@
 # user-audit.sh
 # Audits local user accounts, UID usage, shell access, sudo rights, and last login activity.
 
-set -e
+set -euo pipefail
 
-echo "[*] Auditing user accounts on this system..."
+timestamp() {
+    date +"[%Y-%m-%d %H:%M:%S]"
+}
 
-echo -e "\n--- [ Users with UID 0 ] ---"
+log() {
+    echo -e "\n[$(timestamp)] $1"
+}
+
+log "--- [ Users with UID 0 ] ---"
 awk -F: '($3 == 0) { print $1 " (UID: "$3")" }' /etc/passwd
 
-echo -e "\n--- [ All Local Users (UID >= 1000) ] ---"
+log "--- [ All Local Users (UID >= 1000) ] ---"
 awk -F: '($3 >= 1000 && $3 < 65534) { print $1 " (UID: "$3", Shell: "$7")" }' /etc/passwd
 
-echo -e "\n--- [ Users with Login Shell Access ] ---"
-awk -F: '($7 !~ /nologin|false/) { print $1 " (Shell: "$7")" }' /etc/passwd
+log "--- [ Users with Login Shell Access ] ---"
+awk -F: '($7 !~ /(nologin|false)$/) { print $1 " (Shell: "$7")" }' /etc/passwd
 
-echo -e "\n--- [ Users in the sudo or wheel Group ] ---"
-getent group sudo wheel 2>/dev/null | cut -d: -f4 | tr ',' '\n' | sort | uniq | sed '/^$/d'
+log "--- [ Users in the sudo or wheel Group ] ---"
+for grp in sudo wheel; do
+    getent group "$grp" 2>/dev/null | cut -d: -f4 | tr ',' '\n'
+done | sort -u | sed '/^$/d'
 
-echo -e "\n--- [ Last Login for Each User ] ---"
-lastlog | grep -v "Never logged in"
+log "--- [ Last Login for Each User ] ---"
+lastlog | awk 'NR==1 || $0 !~ /Never logged in/'
 
-echo -e "\n--- [ Users with Empty Passwords ] ---"
-sudo awk -F: '($2 == "") { print $1 " has an empty password!" }' /etc/shadow
+log "--- [ Users with Empty Passwords ] ---"
+sudo awk -F: '($2 == "") { print $1 " has an empty password!" }' /etc/shadow || echo "Unable to access /etc/shadow (need sudo?)"
 
-echo -e "\n[+] User account audit complete."
+log "[✓] User account audit complete."
