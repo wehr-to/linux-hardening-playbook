@@ -38,7 +38,7 @@ Copy the generated DB:
 sudo cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db
 ```
 
-## 🔍 Running AIDE Integrity Checks
+## Running AIDE Integrity Checks
 Run periodically or via cron:
 ```bash
 sudo aide.wrapper --check
@@ -48,7 +48,7 @@ sudo aide.wrapper --check
 - Modified files listed with old/new hash
 - Missing or new files flagged
 
-## 🔁 Automate Checks
+## Automate Checks
 Example crontab entry (daily at 1AM):
 ```cron
 0 1 * * * /usr/bin/aide.wrapper --check | mail -s "AIDE Report $(hostname)" root
@@ -59,7 +59,7 @@ Example crontab entry (daily at 1AM):
 - Review changes carefully; unexpected deltas = red flags
 - Integrate with SIEM for alerting
 
-## 📎 References
+## References
 - [AIDE Project](https://aide.github.io/)
 - [man aide.conf](https://man7.org/linux/man-pages/man5/aide.conf.5.html)
 - CIS Controls 5 & 7: Inventory & File Integrity Monitoring
