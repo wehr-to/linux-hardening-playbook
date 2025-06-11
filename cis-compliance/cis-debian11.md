@@ -27,3 +27,11 @@
 | **Networking** | IPv6 enabled by default; disable if unused in `/etc/sysctl.d/` |
 | **SSH Config** | Located at `/etc/ssh/sshd_config`                              |
 | **User UIDs**  | Local users start from UID 1000 in `/etc/login.defs`           |
+
+Color legend: 
+| Symbol | Meaning                                                 |
+| ------ | ------------------------------------------------------- |
+| ✅      | **Compliant** — Already implemented & verified          |
+| 🔲     | **Not Yet Compliant** — Needs to be addressed           |
+| ⚠️     | **Partially Compliant** — Implemented, but needs review |
+| ❌      | **Non-Compliant** — Explicitly failing or risky         |
