@@ -1,19 +1,31 @@
 #!/bin/bash
 # banner-and-motd.sh
-# Sets a warning banner for legal and security notice
+# Harden system login messages and configure SSH banner
 
-set -e
+set -euo pipefail
 
 BANNER_TEXT="**WARNING: Unauthorized access to this system is prohibited. All activity is monitored and logged.**"
+BANNER_FILE_CONTENT=$(cat <<EOF
+$BANNER_TEXT
+EOF
+)
 
-echo "[*] Setting /etc/issue and /etc/issue.net..."
-echo "$BANNER_TEXT" | sudo tee /etc/issue /etc/issue.net > /dev/null
+timestamp() {
+    date +"[%Y-%m-%d %H:%M:%S]"
+}
 
-echo "[*] Updating /etc/motd..."
-echo -e "\n$BANNER_TEXT" | sudo tee /etc/motd > /dev/null
+log() {
+    echo "$(timestamp) $1"
+}
 
-echo "[*] Configuring SSH to show the banner..."
-sudo sed -i 's|^#Banner.*|Banner /etc/issue.net|' /etc/ssh/sshd_config
-sudo systemctl restart sshd
+log "[*] Writing banner to /etc/issue and /etc/issue.net..."
+echo "$BANNER_FILE_CONTENT" | sudo tee /etc/issue /etc/issue.net > /dev/null
 
-echo "[+] Banner and MOTD setup complete."
+log "[*] Updating /etc/motd..."
+echo -e "\n$BANNER_FILE_CONTENT" | sudo tee /etc/motd > /dev/null
+
+SSH_CONFIG="/etc/ssh/sshd_config"
+BACKUP_FILE="/etc/ssh/sshd_config.bak"
+
+if ! grep -q '^Banner /etc/issue.net' "$SSH_CONFIG"; then
+    log "[*] Backing up SSH conf*]()
